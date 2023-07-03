@@ -1,0 +1,11 @@
+{% extends 'base.html' %} {% block content %}
+    <button onclick="up()">Up</button>
+    <button onclick="down()">Down</button>
+    {% for compose_file in compose_files_info.keys() %}
+        <h2>{{compose_file}}</h2>
+        {% for service in compose_files_info[compose_file] %}
+            <p>{{service.service_name}}      {{service.container_name}}     {{service.container_status}}</p>
+
+        {% endfor %}
+    {% endfor %}
+{% endblock %}
