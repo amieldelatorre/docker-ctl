@@ -1,7 +1,13 @@
-function down() {
-    fetch("http://127.0.0.1:5000/down", {method:'GET', redirect: 'follow'})
+const currentUrl = window.location.href;
+
+async function down() {
+    fetch(`${currentUrl}/down`, {method:'GET', redirect: 'follow'})
+    await new Promise(r => setTimeout(r, 2000));
+    window.location.reload(true)
 }
 
-function up() {
-    fetch("http://127.0.0.1:5000/up", {method:'GET', redirect: 'follow'})
+async function up() {
+    fetch(`${currentUrl}/up`, {method:'GET', redirect: 'follow'})
+    await new Promise(r => setTimeout(r, 2000));
+    window.location.reload(true)
 }
