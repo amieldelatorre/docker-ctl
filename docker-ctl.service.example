@@ -1,0 +1,13 @@
+[Unit]
+Description=Web server to start and stop some docker containers through their compose files
+After=multi-user.target
+
+[Service]
+User=<user>
+Group=<user>
+WorkingDirectory=<path_to_folder>
+ExecStart=<path_to_foldder>/start-service.sh
+Type=simple
+
+[Install]
+WantedBy=multi-user.target

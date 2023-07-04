@@ -2,6 +2,16 @@
 
 Small Flask web server to control docker containers running on a machine using compose files
 
+## Service File
+Populate the docker-ctl.service.example file with the correct values and rename it to docker-ctl.service. Create a copy of the file at `/etc/systemd/system/`
+Then:
+```bash
+sudo systemctl daemon-reload
+sudo systemctl enable docker-ctl.service
+sudo systemctl start docker-ctl.service
+sudo systemctl status docker-ctl.service
+```
+
 ## To run
 ```bash
 python3 -m venv .venv
