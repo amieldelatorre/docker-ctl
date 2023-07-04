@@ -1,0 +1,19 @@
+FROM docker:dind
+
+RUN apk add curl
+RUN apk add --update --no-cache python3
+RUN ln -sf python3 /usr/bin/python
+RUN python3 -m ensurepip
+RUN pip3 install --no-cache --upgrade pip setuptools
+RUN mkdir -p /root/.config/docker-ctl
+RUN mkdir /nginx
+RUN mkdir /whoami
+ADD compose-nginx.yml /nginx
+ADD compose-whoami.yml /whoami
+
+RUN echo "/nginx/compose-nginx.yml" >> /root/.config/docker-ctl/compose-files
+RUN echo "/whoami/compose-whoami.yml" >> /root/.config/docker-ctl/compose-files
+
+EXPOSE 8080
+
+CMD ["bash"]

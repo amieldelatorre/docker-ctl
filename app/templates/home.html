@@ -1,11 +1,28 @@
 {% extends 'base.html' %} {% block content %}
-    <button onclick="up()">Up</button>
-    <button onclick="down()">Down</button>
+    <button class="button-up" onclick="up()">Up</button>
+    <button class="button-down" onclick="down()">Down</button>
     {% for compose_file in compose_files_info.keys() %}
-        <h2>{{compose_file}}</h2>
-        {% for service in compose_files_info[compose_file] %}
-            <p>{{service.service_name}}      {{service.container_name}}     {{service.container_status}}</p>
+        <div class="compose-container">
+            <h2>{{compose_file}}</h2>
+            <table>
+                {% for service in compose_files_info[compose_file] %}
+                    {% if service.container_status == "running" %}
+                        {% set container_status_class="green" %}
+                    {% elif service.container_status == "stopped" %}
+                        {% set container_status_class="grey" %}
+                    {% elif service.container_status == "notFound" %}
+                        {% set container_status_class="red" %}
+                    {% else %}
+                        {% set container_status_class="white" %}
+                    {% endif %}
 
-        {% endfor %}
+                    <tr>
+                        <td>{{service.service_name}}</td>
+                        <td>{{service.container_name}}</td>
+                        <td class="{{container_status_class}}">{{service.container_status}}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
     {% endfor %}
 {% endblock %}
