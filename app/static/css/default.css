@@ -54,6 +54,7 @@ table {
   margin: auto;
   color: black;
   background-image: linear-gradient(#c8d2d3, #c3b2ce);
+  border-collapse: collapse;
 }
 
 tbody {
@@ -64,6 +65,11 @@ tbody {
 td {
   width: 33%;
   text-align: center;
+  padding: 4px;
+}
+
+tr {
+  border-bottom: 1px solid white;
 }
 
 table td + td {
