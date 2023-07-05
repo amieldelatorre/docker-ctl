@@ -6,6 +6,7 @@ Small Flask web server to control docker containers running on a machine using c
 Populate the docker-ctl.service.example file with the correct values and rename it to docker-ctl.service. Create a copy of the file at `/etc/systemd/system/`
 Then:
 ```bash
+chmod +x start_service.sh
 sudo systemctl daemon-reload
 sudo systemctl enable docker-ctl.service
 sudo systemctl start docker-ctl.service
@@ -14,6 +15,11 @@ sudo systemctl status docker-ctl.service
 
 ## To run
 ```bash
+# Make the following are installed before running these commands:
+#    - docker: https://docs.docker.com/get-docker/
+#    - python3
+#    - python3.xx-venv: Should be the same version as python3
+#    - python3 pip
 python3 -m venv .venv
 . .venv/bin/activate
 pip install -r requirements.txt
