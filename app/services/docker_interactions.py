@@ -3,7 +3,7 @@ from app.models.compose_file_list import ComposeFileList
 from app.models.service import Service
 from app.services.os_interactions import get_compose_file_paths
 from app.utils.compose_file_list import file_exists
-from python_on_whales import DockerClient, docker, Container
+from python_on_whales import DockerClient, docker, Container, exceptions
 from pathlib import Path
 from os.path import basename
 from typing import Optional
@@ -25,7 +25,8 @@ def get_compose_files_info() -> ComposeFileList:
             cf = ComposeFile(
                 parent_dir=compose_file_dir,
                 path=compose_file_path,
-                error=str(ComposeFileNotFoundException(f"The compose file in '{compose_file_path}' cannot be found")),
+                error=str(ComposeFileNotFoundException(f"The compose file in '{compose_file_path}' cannot be found or "
+                                                       f"is not valid")),
                 services=[]
             )
 
@@ -61,7 +62,11 @@ def get_services_for_compose(compose_file_path: str) -> Optional[dict[str, str]]
         return None
 
     docker_client = DockerClient(compose_files=[compose_file_path])
-    compose_config = docker_client.compose.config(return_json=True)
+    try:
+        compose_config = docker_client.compose.config(return_json=True)
+    except exceptions.DockerException as e:
+        return None
+
     services_config = compose_config["services"]
 
     services: dict[str, str] = {}
