@@ -115,6 +115,7 @@ table td + td {
   font-size: 20px;
   display: flex;
   align-items: center;
+  justify-content: center;
 }
 
 .compose-file-error {
@@ -124,6 +125,7 @@ table td + td {
   background: #ff7272;
   padding: 10px 15px 10px 15px;
   border-radius: 6px;
+  justify-content: center;
 }
 
 .error-svg {
