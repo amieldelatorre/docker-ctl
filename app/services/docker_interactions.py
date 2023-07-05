@@ -1,8 +1,8 @@
 import json
 from app.models.service import Service
 from app.services.os_interactions import get_compose_file_paths
-from app.utils.compose_file_list import check_file_exists
-from python_on_whales import DockerClient, docker
+from app.utils.compose_file_list import file_exists
+from python_on_whales import DockerClient, docker, Container
 from pathlib import Path
 from os.path import basename
 
@@ -18,7 +18,7 @@ def get_compose_files_info() -> dict[str, list[Service]]:
     return compose_files_and_services_info
 
 def get_services_info(compose_file_path: str) -> list[Service]:
-    if not check_file_exists(compose_file_path):
+    if not file_exists(compose_file_path):
         return None
     
     services: dict[str, str] = get_services_for_compose(compose_file_path)
@@ -73,7 +73,7 @@ def compose_files_down():
     compose_file_paths: list[str] = get_compose_file_paths()
 
     for file in compose_file_paths:
-        if not check_file_exists(file):
+        if not file_exists(file):
             continue
         docker_client = DockerClient(compose_files=[file])
         docker_client.compose.down()
@@ -82,7 +82,12 @@ def compose_files_up():
     compose_file_paths: list[str] = get_compose_file_paths()
 
     for file in compose_file_paths:
-        if not check_file_exists(file):
+        if not file_exists(file):
             continue
         docker_client = DockerClient(compose_files=[file])
         docker_client.compose.up(detach=True)
+
+
+def get_containers_list(show_all: bool = True) -> list[Container]:
+    containers = docker.container.list(all=show_all)
+    return containers
