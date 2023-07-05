@@ -1,5 +1,6 @@
 from app.utils.compose_file_list import COMPOSE_FILE_LOCATION, compose_file_list_exists, file_exists
 
+
 def get_compose_file_paths() -> list[str]:
     if not compose_file_list_exists:
         print(f"ERROR: Could not find {COMPOSE_FILE_LOCATION}. Please create one")

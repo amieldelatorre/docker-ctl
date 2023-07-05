@@ -6,6 +6,7 @@ from python_on_whales import DockerClient, docker, Container
 from pathlib import Path
 from os.path import basename
 
+
 def get_compose_files_info() -> dict[str, list[Service]]:
     compose_file_paths: list[str] = get_compose_file_paths()
 
@@ -16,6 +17,7 @@ def get_compose_files_info() -> dict[str, list[Service]]:
         compose_files_and_services_info[compose_file_dir] = get_services_info(compose_file_path)
 
     return compose_files_and_services_info
+
 
 def get_services_info(compose_file_path: str) -> list[Service]:
     if not file_exists(compose_file_path):
@@ -29,6 +31,7 @@ def get_services_info(compose_file_path: str) -> list[Service]:
 
     return services_info
 
+
 def get_services_for_compose(compose_file_path: str) -> dict[str, str]:
     docker_client = DockerClient(compose_files=[compose_file_path])
     compose_config = docker_client.compose.config(return_json=True)
@@ -39,6 +42,7 @@ def get_services_for_compose(compose_file_path: str) -> dict[str, str]:
         services[name] = services_config[name]["container_name"]
     
     return services
+
 
 def get_service(service_name: str, container_name: str) -> Service:
     if not container_exists(container_name):
@@ -65,9 +69,11 @@ def container_exists(container_name: str) -> bool:
         
     return False
 
+
 def get_container_status(container_name: str) -> str:
     info = docker.container.inspect(container_name)
     return info.state.status
+
 
 def compose_files_down():
     compose_file_paths: list[str] = get_compose_file_paths()
@@ -77,6 +83,7 @@ def compose_files_down():
             continue
         docker_client = DockerClient(compose_files=[file])
         docker_client.compose.down()
+
 
 def compose_files_up():
     compose_file_paths: list[str] = get_compose_file_paths()
