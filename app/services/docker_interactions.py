@@ -1,38 +1,65 @@
-import json
+from app.models.compose_file import ComposeFile
+from app.models.compose_file_list import ComposeFileList
 from app.models.service import Service
 from app.services.os_interactions import get_compose_file_paths
 from app.utils.compose_file_list import file_exists
 from python_on_whales import DockerClient, docker, Container
 from pathlib import Path
 from os.path import basename
+from typing import Optional
+from app.exceptions import ComposeListFileNotFoundException, ComposeFileNotFoundException
 
 
-def get_compose_files_info() -> dict[str, list[Service]]:
-    compose_file_paths: list[str] = get_compose_file_paths()
+def get_compose_files_info() -> ComposeFileList:
+    compose_file_paths: Optional[list[str]] = get_compose_file_paths()
+    if compose_file_paths is None:
+        return ComposeFileList(compose_files=[], error=str(ComposeListFileNotFoundException()))
 
-    compose_files_and_services_info: dict[str, list[Service]] = {}
+    compose_file_list: list[ComposeFile] = []
+
     for compose_file_path in compose_file_paths:
         compose_file_dir = basename(Path(compose_file_path).parent)
+        service_names_and_container_names: Optional[dict[str, str]] = get_services_for_compose(compose_file_path)
 
-        compose_files_and_services_info[compose_file_dir] = get_services_info(compose_file_path)
+        if service_names_and_container_names is None:
+            cf = ComposeFile(
+                parent_dir=compose_file_dir,
+                path=compose_file_path,
+                error=str(ComposeFileNotFoundException(f"The compose file in '{compose_file_path}' cannot be found")),
+                services=[]
+            )
 
-    return compose_files_and_services_info
+            compose_file_list.append(cf)
+            continue
+
+        services_info: list[Service] = get_services_info(service_names_and_container_names)
+        cf = ComposeFile(
+            parent_dir=compose_file_dir,
+            path=compose_file_path,
+            error="",
+            services=services_info
+        )
+        compose_file_list.append(cf)
+
+    return ComposeFileList(
+        compose_files=compose_file_list,
+        error=None
+    )
 
 
-def get_services_info(compose_file_path: str) -> list[Service]:
-    if not file_exists(compose_file_path):
-        return None
-    
-    services: dict[str, str] = get_services_for_compose(compose_file_path)
+def get_services_info(srvc_names_and_ct_names: dict[str, str]) -> list[Service]:
     services_info: list[Service] = []
-    for service_name in services.keys():
-        info: Service = get_service(service_name=service_name, container_name=services[service_name])
+    for service_name in srvc_names_and_ct_names.keys():
+        info: Service = get_srvc_info(service_name=service_name, container_name=srvc_names_and_ct_names[service_name])
         services_info.append(info)
 
     return services_info
 
 
-def get_services_for_compose(compose_file_path: str) -> dict[str, str]:
+def get_services_for_compose(compose_file_path: str) -> Optional[dict[str, str]]:
+    if not file_exists(compose_file_path):
+        return None
+
     docker_client = DockerClient(compose_files=[compose_file_path])
     compose_config = docker_client.compose.config(return_json=True)
     services_config = compose_config["services"]
@@ -44,7 +71,7 @@ def get_services_for_compose(compose_file_path: str) -> dict[str, str]:
     return services
 
 
-def get_service(service_name: str, container_name: str) -> Service:
+def get_srvc_info(service_name: str, container_name: str) -> Service:
     if not container_exists(container_name):
         return Service(
             service_name=service_name, 

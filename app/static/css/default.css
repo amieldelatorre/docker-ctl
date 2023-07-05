@@ -6,6 +6,7 @@
 body {
   background-color: #292929;
   color: white;
+  font-family: 'Roboto', sans-serif;
 }
 
 #main {
@@ -51,6 +52,8 @@ button:hover {
 table {
   width: 60%;
   margin: auto;
+  color: black;
+  background-image: linear-gradient(#c8d2d3, #c3b2ce);
 }
 
 tbody {
@@ -72,7 +75,7 @@ table td + td {
 }
 
 .green {
-  color: #32CD32;
+  color: #17a417;
 }
 
 .white {
@@ -81,4 +84,42 @@ table td + td {
 
 .grey {
   color: #D3D3D3;
+}
+
+.compose-container {
+  margin: 15px auto 30px auto;
+}
+
+.compose-container-heading {
+  background: #4b9faa;
+  padding: 2px 10px 2px 10px;
+  border-radius: 4px;
+}
+
+.compose-file-dir-path {
+  text-align: right;
+}
+
+.compose-files-list-error {
+  background: #ff7272;
+  padding: 10px 15px 10px 15px;
+  color: black;
+  border-radius: 6px;
+  vertical-align: middle;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+}
+
+.compose-file-error {
+  display: flex;
+  align-items: center;
+  margin: 15px auto 15px auto;
+  background: #ff7272;
+  padding: 10px 15px 10px 15px;
+  border-radius: 6px;
+}
+
+.error-svg {
+  height: 50px;
 }

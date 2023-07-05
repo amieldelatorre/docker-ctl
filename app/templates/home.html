@@ -1,28 +1,52 @@
 {% extends 'base.html' %} {% block content %}
-    <button class="button-up" onclick="up()">Up</button>
-    <button class="button-down" onclick="down()">Down</button>
-    {% for compose_file in compose_files_info.keys() %}
-        <div class="compose-container">
-            <h2>{{compose_file}}</h2>
-            <table>
-                {% for service in compose_files_info[compose_file] %}
-                    {% if service.container_status == "running" %}
-                        {% set container_status_class="green" %}
-                    {% elif service.container_status == "stopped" %}
-                        {% set container_status_class="grey" %}
-                    {% elif service.container_status == "notFound" %}
-                        {% set container_status_class="red" %}
-                    {% else %}
-                        {% set container_status_class="white" %}
-                    {% endif %}
-
-                    <tr>
-                        <td>{{service.service_name}}</td>
-                        <td>{{service.container_name}}</td>
-                        <td class="{{container_status_class}}">{{service.container_status}}</td>
-                    </tr>
-                {% endfor %}
-            </table>
+    {% if compose_files_list_info.error is not none and compose_files_list_info.error|length %}
+        <div class="compose-files-list-error">
+            <img class="error-svg" src="{{url_for('static', filename='img/warning-sign-svgrepo-com.svg')}}" />
+            <div class="compose-files-list-error-text">
+                <p>{{compose_files_list_info.error}}</p>
+                <p>Make sure your compose file list at {{compose_files_list_info.path}} is configured correctly.</p>
+            </div>
         </div>
-    {% endfor %}
+    {% else %}
+        <button class="button-up" onclick="up()">Up</button>
+        <button class="button-down" onclick="down()">Down</button>
+        {% for compose_file in compose_files_list_info.compose_files %}
+            {% if compose_file.error is not none and compose_file.error|length %}
+                <div class="compose-file-error">
+                    <img class="error-svg" src="{{url_for('static', filename='img/warning-sign-svgrepo-com.svg')}}" />
+                    <div class="compose-file-error-text">
+                        <p>{{compose_file.error}}</p>
+                        <p>Make sure your compose file at {{compose_files_list_info.path}} is configured correctly.</p>
+                    </div>
+                </div>
+            {% else %}
+                <div class="compose-container">
+                    <div class="compose-container-heading">
+                        <h2>{{compose_file.parent_dir}}</h2>
+                        <p class="compose-file-dir-path"><small>{{compose_file.path}}</small></p>
+                    </div>
+
+                    <table>
+                        {% for service in compose_file.services %}
+                            {% if service.container_status == "running" %}
+                                {% set container_status_class="green" %}
+                            {% elif service.container_status == "stopped" %}
+                                {% set container_status_class="grey" %}
+                            {% elif service.container_status == "notFound" %}
+                                {% set container_status_class="red" %}
+                            {% else %}
+                                {% set container_status_class="white" %}
+                            {% endif %}
+
+                            <tr>
+                                <td>{{service.service_name}}</td>
+                                <td>{{service.container_name}}</td>
+                                <td class="{{container_status_class}}">{{service.container_status}}</td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            {% endif%}
+        {% endfor %}
+    {% endif%}
 {% endblock %}
