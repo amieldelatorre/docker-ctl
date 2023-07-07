@@ -10,7 +10,7 @@ name: Build and Test
 node:
   name: amd64-runner-1  
 
-stesps:
+steps:
 - name: Check docker in docker for me
   image: bash
   commands:
