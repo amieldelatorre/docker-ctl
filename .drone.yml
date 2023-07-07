@@ -8,7 +8,7 @@ type: docker
 name: Build and Test
 
 node:
-  name: amd64-runner-1  
+  name: arm64-runner-1  
 
 steps:
 - name: Check docker in docker for me
