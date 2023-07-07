@@ -7,6 +7,10 @@ kind: pipeline
 type: docker
 name: Build and Test
 
+platform:
+  os: linux
+  arch: amd64
+
 stesps:
 - name: Check docker in docker for me
   image: bash
