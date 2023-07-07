@@ -14,4 +14,4 @@ steps:
 - name: Check docker in docker for me
   image: bash
   commands:
-    - echo $DRONE_RUNNER_NAME
+    - printenv
