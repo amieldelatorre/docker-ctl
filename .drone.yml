@@ -7,9 +7,8 @@ kind: pipeline
 type: docker
 name: Build and Test
 
-platform:
-  os: linux
-  arch: amd64
+node:
+  name: arm64-runner-1  
 
 stesps:
 - name: Check docker in docker for me
