@@ -10,7 +10,7 @@ concurrency:
   limit: 1
 
 platform:
-  os: lijnux
+  os: linux
   arch: arm64
 
 stesps:
