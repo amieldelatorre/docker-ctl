@@ -9,6 +9,10 @@ name: Build and Test
 concurrency: 
   limit: 1
 
+platform:
+  os: lijnux
+  arch: arm64
+
 stesps:
 - name: Check docker in docker for me
   image: bash
