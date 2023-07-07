@@ -6,12 +6,6 @@
 kind: pipeline
 type: docker
 name: Build and Test
-concurrency: 
-  limit: 1
-
-platform:
-  os: linux
-  arch: arm64
 
 stesps:
 - name: Check docker in docker for me
