@@ -11,7 +11,7 @@ node:
   name: amd64-runner-1  
 
 steps:
-- name: Debug: runner info
+- name: Runner name
   image: bash
   commands:
     - echo $DRONE_STAGE_MACHINE
