@@ -8,10 +8,31 @@ type: docker
 name: Build and Test
 
 node:
-  name: arm64-runner-1  
+  name: amd64-runner-1  
 
 steps:
-- name: Check docker in docker for me
+- name: Debug: runner info
   image: bash
   commands:
     - echo $DRONE_STAGE_MACHINE
+
+- name: Check dind
+  image: docker:dind
+  volumes: 
+  - name: doclersock
+    path: /var/run
+  commands:
+    - sleep 5
+    - docker ps -a
+
+services:
+- name: docker
+  image: docker:dind
+  privileged: true
+  volumes:
+  - name: dockersock
+    path: /var/run
+
+volumes:
+- name: dockersock
+  temp: {}
