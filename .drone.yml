@@ -1,0 +1,16 @@
+---
+################
+# Build & Test #
+################
+
+kind: pipeline
+type: docker
+name: Build and Test
+concurrency: 
+  limit: 1
+
+stesps:
+- name: Check docker in docker for me
+  image: bash
+  commands:
+    - echo $DRONE_RUNNER_NAME
